@@ -1,0 +1,84 @@
+﻿@using GroceryManagement.Bus;
+@using GroceryManagement.Entity;
+@{
+    Layout = null;
+    List<SoLuongHang> dsSoLuongHang = new List<SoLuongHang>();
+    List<HoaDonNhap> dsHoaDonNhap = XuLyHoaDonNhap.docHoaDonNhap();
+    List<HoaDonBan> dsHoaDonBan = XuLyHoaDonBan.docHoaDonBan();
+    dsSoLuongHang = XuLySoLuongHang.capNhatSoLuong(dsHoaDonNhap, dsHoaDonBan);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>1988022 - Phan Thanh Hải</title>
+    <style>
+        table.tableBodyScroll tbody {
+            display: block;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+            table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+    </style>
+</head>
+<body>
+    <div class="container mt-1">
+        <div class="container-fluid bg-light">
+            <ul class="nav justify-content-center">
+                <li class="nav-item active">
+                    <a class="nav-link" href="~/UI/MainPage.cshtml">Trang Chu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/CategoryPage.cshtml">Loai Hang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/ReceivedInvoicePage.cshtml">Hoa Don Nhap</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/SalesInvoicePage.cshtml">Hoa Don Ban</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/RemainingGoodsPage.cshtml">So Luong Hang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/ExpiredGoodsPage.cshtml">Hang Het Han Su Dung</a>
+                </li>
+            </ul>
+        </div>
+        <h1 class="text-center font-weight-bold my-3">So Luong Hang Hien Co</h1>
+        <table class="table mt-3 tableBodyScroll">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="text-center">#</th>
+                    <th scope="col" class="text-center">Loai Hang</th>
+                    <th scope="col" class="text-center">So Luong Hien Co</th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    for (int i=0; i<dsSoLuongHang.Count; i++)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row">@(i+1)</th>
+                            <td class="text-center">@dsSoLuongHang[i].loaiHang</td>
+                            <td class="text-center">@dsSoLuongHang[i].soLuong</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/5c5becb3f7.js" crossorigin="anonymous"></script>
+</body>
+</html>

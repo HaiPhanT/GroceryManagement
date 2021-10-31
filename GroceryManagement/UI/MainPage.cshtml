@@ -1,0 +1,163 @@
+﻿@using GroceryManagement.Bus;
+@using GroceryManagement.Entity;
+@{
+    Layout = null;
+    MatHang matHang = new MatHang();
+    List<MatHang> dsMatHang = new List<MatHang>();
+    string searchType = string.Empty;
+    string searchWord = string.Empty;
+
+    List<LoaiHang> dsLoaiHang = XuLyLoaiHang.docLoaiHang();
+
+    if (IsPost)
+    {
+        if (!String.IsNullOrEmpty(Request["id"]))
+        {
+            matHang.id = Request["id"];
+            matHang.ten = Request["ten"];
+            matHang.hsd = Helper.getFormattedDate(Request["hsd"]);
+            matHang.cty = Request["cty"];
+            matHang.nsx = int.Parse(Request["nsx"]);
+            matHang.loai = Request["loai"];
+            XuLyMatHang.luuMatHang(matHang);
+            Response.Redirect("~/UI/MainPage.cshtml");
+        }
+        else
+        {
+            searchType = Request["searchType"];
+            searchWord = Request["searchWord"];
+            dsMatHang = XuLyMatHang.timKiemMatHang(searchType, searchWord);
+        }
+    }
+    dsMatHang = XuLyMatHang.timKiemMatHang(searchType, searchWord);
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <title>1988022 - Phan Thanh Hải</title>
+    <style>
+        table.tableBodyScroll tbody {
+            display: block;
+            max-height: 350px;
+            overflow-y: auto;
+        }
+
+            table.tableBodyScroll thead, table.tableBodyScroll tbody tr {
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+            }
+    </style>
+</head>
+<body>
+    <div class="container mt-1">
+        <div class="container-fluid bg-light">
+            <ul class="nav justify-content-center">
+                <li class="nav-item active">
+                    <a class="nav-link" href="~/UI/MainPage.cshtml">Trang Chu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/CategoryPage.cshtml">Loai Hang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/ReceivedInvoicePage.cshtml">Hoa Don Nhap</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/SalesInvoicePage.cshtml">Hoa Don Ban</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/RemainingGoodsPage.cshtml">So Luong Hang</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="~/UI/ExpiredGoodsPage.cshtml">Hang Het Han Su Dung</a>
+                </li>
+            </ul>
+        </div>
+        <h1 class="text-center font-weight-bold my-3">Grocery Store</h1>
+        <form action="~/UI/MainPage.cshtml" method="post">
+            <div class="row mx-0">
+                <input class="form-control col-10" type="text" name="searchWord" value="@searchWord" />
+                <button type="submit" class="btn btn-primary col-2"><i class="fas fa-search"></i> Search</button>
+            </div>
+            <div class="row mt-2">
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="id" /> Id
+                </div>
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="ten" /> Ten
+                </div>
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="hsd" /> Hsd
+                </div>
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="cty" /> Cty
+                </div>
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="nsx" /> Nsx
+                </div>
+                <div class="col text-center">
+                    <input type="radio" name="searchType" value="loai" /> Loai
+                </div>
+            </div>
+        </form>
+        <table class="table mt-3 tableBodyScroll">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col" class="text-center">Id</th>
+                    <th scope="col" class="text-center">Mat Hang</th>
+                    <th scope="col" class="text-center">HSD</th>
+                    <th scope="col" class="text-center">Cty SX</th>
+                    <th scope="col" class="text-center">Nam SX</th>
+                    <th scope="col" class="text-center">Loai</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (MatHang m in dsMatHang)
+                    {
+                        <tr>
+                            <th class="text-center" scope="row">@m.id</th>
+                            <td class="text-center">@m.ten</td>
+                            <td class="text-center">@m.hsd</td>
+                            <td class="text-center">@m.cty</td>
+                            <td class="text-center">@m.nsx</td>
+                            <td class="text-center">@m.loai</td>
+                            <td class="text-center">
+                                <a href="~/UI/EditMH.cshtml?id=@m.id&ten=@m.ten&hsd=@m.hsd&cty=@m.cty&nsx=@m.nsx&loai=@m.loai" class="btn btn-sm btn-success" style="width: 2rem;">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a> <a href="~/UI/DeleteMH.cshtml?id=@m.id" class="btn btn-sm btn-danger" style="width: 2rem;">
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <form action="~/UI/MainPage.cshtml" method="post" class="row" style="padding-right: 15px; padding-left: 15px;">
+            <input type="text" class="form-control mb-2 mr-sm-2 col" name="id" placeholder="Id" required>
+            <input type="text" class="form-control mb-2 mr-sm-2 col" name="ten" placeholder="Ten" required>
+            <input type="text" class="form-control mb-2 mr-sm-2 col" name="hsd" placeholder="HSD" required onfocus="(this.type='date')">
+            <input type="text" class="form-control mb-2 mr-sm-2 col" name="cty" placeholder="Cty" required>
+            <input type="text" class="form-control mb-2 mr-sm-2 col" name="nsx" placeholder="NSX" required>
+            <select name="loai" class="form-control mb-2 mr-sm-2 col" required>
+                <option value="" disabled selected>Loai</option>
+                @foreach (LoaiHang lh in dsLoaiHang)
+                {
+                    <option value="@lh.loaiHang">@lh.loaiHang</option>
+                }
+            </select>
+            <button type="submit" class="btn btn-primary mb-2 col">Add</button>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/5c5becb3f7.js" crossorigin="anonymous"></script>
+</body>
+</html>
